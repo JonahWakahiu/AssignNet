@@ -1,8 +1,38 @@
 /* nunito fonts */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
+/* import bootstrap icons */
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 [x-cloak] { display: none !important; }
+
+@layer components
+{
+    h6 {
+        @apply text-lg font-semibold;
+    }
+
+    h5 {
+        @apply text-xl font-semibold;
+    }
+    h4 {
+        @apply text-2xl font-semibold;
+    }
+    h3 {
+        @apply text-3xl font-semibold;
+    }
+    h2 {
+        @apply text-4xl font-semibold;
+    }
+    h1 {
+        @apply text-5xl font-semibold;
+    }
+
+    .form-btn {
+        @apply py-2 px-7 text-base  font-semibold rounded-md text-white bg-java-500 hover:bg-java-600;
+    }
+}
