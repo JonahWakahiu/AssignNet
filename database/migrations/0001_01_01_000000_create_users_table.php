@@ -14,6 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('your_location')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->dateTime('birth_date')->nullable();
+            $table->text('language')->nullable();
+            $table->string('profile_image')->nullable();
             $table->string('facebook_id')->nullable();
             $table->string('google_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();

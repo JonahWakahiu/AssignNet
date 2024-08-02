@@ -1,4 +1,4 @@
-<nav class="bg-tia-50 border-b border-slate-200">
+<nav class="bg-white border-b border-slate-200">
     <div class="flex items-center h-20 container mx-auto">
 
         <div class="flex gap-3 items-center">
@@ -18,7 +18,7 @@
             <h4 class="font-extrabold">AssignNet</h4>
         </div>
 
-        <div class="flex gap-4 ms-auto text-slate-900">
+        <div class="flex gap-6 ms-auto text-slate-900">
             <a href="{{ route('home') }}" @class([
                 'font-semibold hover:text-tia-500',
                 'text-tia-700' => request()->routeIs('home'),
@@ -28,11 +28,21 @@
             <a href="" @class(['font-semibold hover:text-tia-500'])>How It Works</a>
             <a href="" @class(['font-semibold hover:text-tia-500'])>Reviews</a>
             <a href="" @class(['font-semibold hover:text-tia-500'])>FAQs</a>
+            <a href="{{ route('login') }}" @class([
+                'font-semibold hover:text-tia-500 inline-flex items-center gap-1.5',
+            ])>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person size-5 stroke-2"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                </svg>
+                Sign In</a>
         </div>
 
-        <a href="{{ route('login') }}"
-            class="text-white text-sm bg-tia-700 rounded-md py-2 px-5 ms-4 font-semibold hover:bg-tia-800">My
-            Account</a>
+
+        <a href="{{ route('order.step-one') }}"
+            class="text-white text-sm bg-tia-700 rounded-md py-2 px-5 ms-10 font-semibold hover:bg-tia-800">Order
+            Now</a>
 
     </div>
 

@@ -6,6 +6,7 @@ export default {
     "./resources/**/*.vue",
   ],
   theme: {
+
     extend: {
         fontFamily: {
             nunito: ["Nunito", 'sans-serif']

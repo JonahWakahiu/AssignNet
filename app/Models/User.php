@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,6 +23,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'your_location',
+        'phone_number',
+        'birth_date',
+        'language',
+        'profile_image',
     ];
 
     /**
@@ -49,11 +56,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // accessors
+    public function profileImage(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => $value ? $value : '/assets/background/avatar.svg',
+        );
+    }
 
     // relationships
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
     // endrelationships
 }

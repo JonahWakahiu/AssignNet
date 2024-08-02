@@ -1,3 +1,4 @@
-<div>
-    <!-- Live as if you were to die tomorrow. Learn as if you were to live forever. - Mahatma Gandhi -->
-</div>
+@props(['name'])
+
+<input id="{{ $name }}" name="{{ $name }}" type="radio"
+    {{ $attributes->merge(['class' => "before:content[''] relative h-4 w-4 appearance-none rounded-full border border-slate-300 bg-slate-100 before:invisible before:absolute before:left-1/2 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-slate-100 checked:border-java-500 checked:bg-java-500 checked:before:visible focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-800 checked:focus:outline-java-500 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:before:bg-slate-100 dark:checked:border-java-600 dark:checked:bg-java-600 dark:focus:outline-slate-300 dark:checked:focus:outline-java-600"]) }}>
