@@ -18,7 +18,7 @@
             <h4 class="font-extrabold">AssignNet</h4>
         </div>
 
-        <div class="flex gap-6 ms-auto text-slate-900">
+        <div class="hidden md:flex gap-6 ms-auto text-slate-900 ">
             <a href="{{ route('home') }}" @class([
                 'font-semibold hover:text-tia-500',
                 'text-tia-700' => request()->routeIs('home'),

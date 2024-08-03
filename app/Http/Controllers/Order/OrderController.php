@@ -20,6 +20,26 @@ class OrderController extends Controller
 {
     public function orderStepOne(Request $request): View
     {
+        $academicLevels = [
+            [
+                'label' => 'College',
+                'value' => 'College',
+            ],
+            [
+                'label' => 'Undergraduate',
+                'value' => 'Undergraduate',
+            ],
+            [
+                'label' => 'Masters',
+                'value' => 'Masters',
+            ],
+            [
+                'label' => 'PhD',
+                'value' => 'PhD',
+            ],
+        ];
+
+
         $paper_types = [
             'Research Paper',
             'Essay',
@@ -76,9 +96,54 @@ class OrderController extends Controller
             ['label' => 'Statistics', 'value' => 'Statistics'],
         ];
 
+        // prices
+        $basePrices = [
+            'college' => 20,
+            'undergraduate' => 25,
+            'masters' => 30,
+            'PhD' => 35,
+        ];
+
+        // Additional cost per page
+        $pricePerPage = 5;
+
+        // Urgency multipliers
+        $urgencyMultipliers = [
+            '6 hours' => 2.0,
+            '12 hours' => 1.75,
+            '24 hours' => 1.5,
+            '48 hours' => 1.25,
+            '3 days' => 1.1,
+            '5 days' => 1.05,
+            '7 days' => 1.0,
+        ];
+
+        // Writer category multipliers
+        $writersCategoryMultipliers = [
+            'standard' => 1.0,
+            'premium' => 1.2,
+            'platinum' => 1.5,
+        ];
+
+
+
+
         $order = $request->session()->get('order');
 
-        return view('client.order.step-one', compact('paper_types', 'disciplines', 'order'));
+        return view(
+            'client.order.step-one',
+            compact(
+                'academicLevels',
+                'paper_types',
+                'disciplines',
+                'order',
+                'basePrices',
+                'pricePerPage',
+                'urgencyMultipliers',
+                'writersCategoryMultipliers'
+
+            )
+        );
     }
 
     public function handleOrderStepOne(Request $request): RedirectResponse

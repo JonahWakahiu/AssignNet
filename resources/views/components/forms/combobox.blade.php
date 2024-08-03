@@ -1,4 +1,4 @@
-@props(['name', 'options'])
+@props(['name', 'options', 'value'])
 
 @php
     $options = array_map(function ($option) {
@@ -6,36 +6,12 @@
     }, $options);
 @endphp
 
-<div x-data="{
+
+<div x-data="combobox({
     allOptions: @js($options),
-    options: [],
-    isOpen: false,
-    openedWithKeyboard: false,
-    selectedOption: null,
-    setSelectedOption(option) {
-        this.selectedOption = option
-        this.isOpen = false
-        this.openedWithKeyboard = false
-        this.$refs.hiddenTextField.value = option.value
-    },
-    getFilteredOptions(query) {
-        this.options = this.allOptions.filter((option) =>
-            option.label.toLowerCase().includes(query.toLowerCase()),
-        )
-        if (this.options.length === 0) {
-            this.$refs.noResultsMessage.classList.remove('hidden')
-        } else {
-            this.$refs.noResultsMessage.classList.add('hidden')
-        }
-    },
-    handleKeydownOnOptions(event) {
-        // if the user presses backspace or the alpha-numeric keys, focus on the search field
-        if ((event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode === 8) {
-            this.$refs.searchField.focus()
-        }
-    },
-}" class="flex w-full  flex-col gap-1" x-on:keydown="handleKeydownOnOptions($event)"
-    x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false" x-init="options = allOptions">
+})" class="flex w-full flex-col gap-1" x-on:keydown="handleKeydownOnOptions($event)"
+    x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false">
+
     <div class="relative">
 
         <!-- trigger button  -->
@@ -45,8 +21,7 @@
             x-on:keydown.down.prevent="openedWithKeyboard = true" x-on:keydown.enter.prevent="openedWithKeyboard = true"
             x-on:keydown.space.prevent="openedWithKeyboard = true" x-bind:aria-expanded="isOpen || openedWithKeyboard"
             x-bind:aria-label="selectedOption ? selectedOption.value : 'Please Select'">
-            <span class="text-sm font-normal "
-                x-text="selectedOption ? selectedOption.value : 'Please Select...'"></span>
+            <span class="text-sm font-normal" x-text="selectedOption ? selectedOption.value : 'Please Select'"></span>
             <!-- Chevron  -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"class="size-5"
                 aria-hidden="true">
@@ -57,12 +32,13 @@
         </button>
 
         <!-- Hidden Input To Grab The Selected Value  -->
-        <input id="{{ $name }}" name="{{ $name }}" x-ref="hiddenTextField" hidden="" />
+        <input id="{{ $name }}" name="{{ $name }}" x-model="selectedOptionValue" x-ref="hiddenTextField"
+            type="hidden" />
         <div x-show="isOpen || openedWithKeyboard" id="makesList"
             class="absolute left-0 top-11 z-10 w-full overflow-hidden rounded-xl border border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-slate-800"
             role="listbox" aria-label="industries list" x-on:click.outside="isOpen = false, openedWithKeyboard = false"
             x-on:keydown.down.prevent="$focus.wrap().next()" x-on:keydown.up.prevent="$focus.wrap().previous()"
-            x-transition x-trap="openedWithKeyboard">
+            x-transition x-trap="isOpen || openedWithKeyboard">
 
             <!-- Search  -->
             <div class="relative">
@@ -75,8 +51,8 @@
                 </svg>
                 <input type="text"
                     class="w-full border-b borderslate-300 bg-slate-100 py-2.5 pl-11 pr-4 text-sm text-slate-700 focus:outline-none focus-visible:border-blue-700 disabled:cursor-not-allowed disabled:opacity-75 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus-visible:border-blue-600"
-                    name="searchField" aria-label="Search" x-on:input="getFilteredOptions($el.value)"
-                    x-ref="searchField" placeholder="Search" />
+                    name="searchField" x-ref="searchField" aria-label="Search"
+                    x-on:input="getFilteredOptions($el.value)" placeholder="Search" />
             </div>
 
             <!-- Options  -->
@@ -104,3 +80,46 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('combobox', (comboboxData = {
+            allOptions: [],
+        }, ) => ({
+            options: comboboxData.allOptions,
+            isOpen: false,
+            openedWithKeyboard: false,
+            selectedOption: null,
+            selectedOptionValue() {
+                if (this.selectedOption) {
+                    return selectedOption.value;
+                } else {
+                    return '';
+                }
+            },
+            setSelectedOption(option) {
+                this.selectedOption = option
+                this.isOpen = false
+                this.openedWithKeyboard = false
+                this.$refs.hiddenTextField.value = option.value
+            },
+            getFilteredOptions(query) {
+                this.options = comboboxData.allOptions.filter((option) =>
+                    option.label.toLowerCase().includes(query.toLowerCase()),
+                )
+                if (this.options.length === 0) {
+                    this.$refs.noResultsMessage.classList.remove('hidden')
+                } else {
+                    this.$refs.noResultsMessage.classList.add('hidden')
+                }
+            },
+            // if the user presses backspace or the alpha-numeric keys, focus on the search field
+            handleKeydownOnOptions(event) {
+                if ((event.keyCode >= 65 && event.keyCode <= 90) || (event.keyCode >= 48 && event
+                        .keyCode <= 57) || event.keyCode === 8) {
+                    this.$refs.searchField.focus()
+                }
+            },
+        }))
+    })
+</script>
