@@ -17,7 +17,7 @@
 
         <div class="mb-2">
             <x-forms.label for="email" value="Email" />
-            <x-forms.input name="email" />
+            <x-forms.input name="email" value="{{ old('email') }}" />
             <x-forms.error name="email" />
         </div>
 
@@ -30,7 +30,7 @@
         <div class="text-sm flex mt-3">
             <div>
                 <x-forms.label for="remember_me" class="flex items-center gap-2">
-                    <x-forms.checkbox name="remember_me" />
+                    <x-forms.checkbox name="remember_me" :checked="old('remember_me')" />
                     Remember Me
                 </x-forms.label>
             </div>

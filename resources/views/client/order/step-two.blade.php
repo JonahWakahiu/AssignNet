@@ -51,7 +51,7 @@
 
                         <div class="mb-2">
                             <x-forms.label for="phone_number" value="Phone Number" />
-                            <x-forms.input name="phone_number" value="{{ old('phone_number') }}" />
+                            <x-forms.phonenumber name="phone_number" value="{{ old('phone_number') }}" />
                             <x-forms.error name="phone_number" bag="newUser" />
                         </div>
 

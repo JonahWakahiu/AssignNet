@@ -1,5 +1,5 @@
-/* nunito fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+/* nunito-sans fonts & lora */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
 /* import bootstrap icons */
 @import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -13,23 +13,23 @@
 @layer components
 {
     h6 {
-        @apply text-lg font-semibold;
+        @apply font-bold text-slate-700 ;
     }
 
     h5 {
-        @apply text-xl font-semibold;
+        @apply font-bold text-slate-700 ;
     }
     h4 {
-        @apply text-2xl font-semibold;
+        @apply  font-bold text-slate-700 ;
     }
     h3 {
-        @apply text-3xl font-semibold;
+        @apply  font-bold text-slate-700 ;
     }
     h2 {
-        @apply text-4xl font-semibold;
+        @apply  font-bold text-slate-700 ;
     }
     h1 {
-        @apply text-5xl font-semibold;
+        @apply  font-bold text-slate-700 ;
     }
 
     .form-btn {

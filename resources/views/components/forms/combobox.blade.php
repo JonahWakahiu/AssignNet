@@ -1,17 +1,9 @@
-@props(['name', 'options', 'value'])
-
-@php
-    $options = array_map(function ($option) {
-        return (object) $option;
-    }, $options);
-@endphp
-
+@props(['name', 'options'])
 
 <div x-data="combobox({
-    allOptions: @js($options),
+    allOptions: @js($options)
 })" class="flex w-full flex-col gap-1" x-on:keydown="handleKeydownOnOptions($event)"
     x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false">
-
     <div class="relative">
 
         <!-- trigger button  -->
@@ -20,8 +12,8 @@
             role="combobox" aria-controls="makesList" aria-haspopup="listbox" x-on:click="isOpen = ! isOpen"
             x-on:keydown.down.prevent="openedWithKeyboard = true" x-on:keydown.enter.prevent="openedWithKeyboard = true"
             x-on:keydown.space.prevent="openedWithKeyboard = true" x-bind:aria-expanded="isOpen || openedWithKeyboard"
-            x-bind:aria-label="selectedOption ? selectedOption.value : 'Please Select'">
-            <span class="text-sm font-normal" x-text="selectedOption ? selectedOption.value : 'Please Select'"></span>
+            x-bind:aria-label="selectedOption ? selectedOption : 'Please Select'">
+            <span class="text-sm font-normal" x-text="selectedOption ? selectedOption : 'Please Select'"></span>
             <!-- Chevron  -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"class="size-5"
                 aria-hidden="true">
@@ -32,8 +24,7 @@
         </button>
 
         <!-- Hidden Input To Grab The Selected Value  -->
-        <input id="{{ $name }}" name="{{ $name }}" x-model="selectedOptionValue" x-ref="hiddenTextField"
-            type="hidden" />
+        <input :id="$id('combobox')" name="{{ $name }}" x-ref="hiddenTextField" hidden="" />
         <div x-show="isOpen || openedWithKeyboard" id="makesList"
             class="absolute left-0 top-11 z-10 w-full overflow-hidden rounded-xl border border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-slate-800"
             role="listbox" aria-label="industries list" x-on:click.outside="isOpen = false, openedWithKeyboard = false"
@@ -60,12 +51,12 @@
                 <li class="hidden px-4 py-2 text-sm text-slate-700 dark:text-slate-300" x-ref="noResultsMessage">
                     <span>No matches found</span>
                 </li>
-                <template x-for="(item, index) in options" x-bind:key="item.value">
+                <template x-for="(item, index) in options" x-bind:key="item">
                     <li class="combobox-option inline-flex cursor-pointer justify-between gap-6 bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-800/5 hover:text-black focus-visible:bg-slate-800/5 focus-visible:text-black focus-visible:outline-none dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-100/5 dark:hover:text-white dark:focus-visible:bg-slate-100/10 dark:focus-visible:text-white"
                         role="option" x-on:click="setSelectedOption(item)" x-on:keydown.enter="setSelectedOption(item)"
                         x-bind:id="'option-' + index" tabindex="0">
                         <!-- Label  -->
-                        <span x-bind:class="selectedOption == item ? 'font-bold' : null" x-text="item.label"></span>
+                        <span x-bind:class="selectedOption == item ? 'font-bold' : null" x-text="item"></span>
                         <!-- Screen reader 'selected' indicator  -->
                         <span class="sr-only" x-text="selectedOption == item ? 'selected' : null"></span>
                         <!-- Checkmark  -->
@@ -90,22 +81,15 @@
             isOpen: false,
             openedWithKeyboard: false,
             selectedOption: null,
-            selectedOptionValue() {
-                if (this.selectedOption) {
-                    return selectedOption.value;
-                } else {
-                    return '';
-                }
-            },
             setSelectedOption(option) {
                 this.selectedOption = option
                 this.isOpen = false
                 this.openedWithKeyboard = false
-                this.$refs.hiddenTextField.value = option.value
+                this.$refs.hiddenTextField.value = option
             },
             getFilteredOptions(query) {
                 this.options = comboboxData.allOptions.filter((option) =>
-                    option.label.toLowerCase().includes(query.toLowerCase()),
+                    option.toLowerCase().includes(query.toLowerCase()),
                 )
                 if (this.options.length === 0) {
                     this.$refs.noResultsMessage.classList.remove('hidden')

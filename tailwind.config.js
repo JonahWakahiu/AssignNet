@@ -8,8 +8,13 @@ export default {
   theme: {
 
     extend: {
+        screens: {
+            xs: '380px',
+            sm: '576px',
+          },
         fontFamily: {
-            nunito: ["Nunito", 'sans-serif']
+            'nunito-sans': [ "Nunito Sans", 'sans-serif'],
+            lora: ["Lora", 'serif'],
         },
         colors: {
 

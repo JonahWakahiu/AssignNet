@@ -9,18 +9,18 @@
 
         <div class="mb-7">
             <h4 class="font-extrabold text-slate-700">Sign Up</h4>
-            <p class="text-sm mt-1">Enter your email and password to register</p>
+            <p class="text-sm mt-1">Enter your personal details to register</p>
         </div>
 
         <div class="mb-2">
             <x-forms.label for="name" value="Full Name" />
-            <x-forms.input name="name" />
+            <x-forms.input name="name" value="{{ old('name') }}" />
             <x-forms.error name="name" />
         </div>
 
         <div class="mb-2">
             <x-forms.label for="email" value="Email" />
-            <x-forms.input name="email" />
+            <x-forms.input name="email" value="{{ old('email') }}" />
             <x-forms.error name="email" />
         </div>
 
@@ -37,8 +37,8 @@
         </div>
 
         <div class="text-sm  mt-3">
-            <x-forms.label for="remember_me" class="flex items-center gap-2">
-                <x-forms.checkbox name="remember_me" />
+            <x-forms.label for="terms" class="flex items-center gap-2">
+                <x-forms.checkbox name="terms" :checked="old('terms')" />
                 I agree the <a href="" class="text-java-500 hover:text-java-600">Terms and
                     Conditions</a>
             </x-forms.label>

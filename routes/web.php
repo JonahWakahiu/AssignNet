@@ -1,12 +1,16 @@
 <?php
 
+use App\Http\Controllers\Homecontroller;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\PricesController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('guest')->group(function () {
-    Route::view('/', 'home')->name('home');
+    Route::controller(Homecontroller::class)->group(function () {
+        Route::get('/', 'index')->name('home');
+    });
 
     Route::controller(OrderController::class)->name('order.')->group(function () {
         Route::get('/order/step-one', 'orderStepOne')->name('step-one');
@@ -15,6 +19,11 @@ Route::middleware('guest')->group(function () {
         Route::post('/order/step-two', 'handleOrderStepTwo')->name('step-two.handle');
         Route::post('/order/step-two-existing-user', 'handleOrderStepTwoExistingUser')->name('step-two-existing-user.handle');
     });
+
+    Route::get('/prices', [PricesController::class, 'index'])->name('prices');
+
+    Route::view('/about', 'client.aboutUs.index')->name('about');
+    Route::view('services', 'client.services.index')->name('services');
 });
 
 

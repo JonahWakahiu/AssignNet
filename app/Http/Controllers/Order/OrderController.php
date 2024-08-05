@@ -20,112 +20,19 @@ class OrderController extends Controller
 {
     public function orderStepOne(Request $request): View
     {
-        $academicLevels = [
-            [
-                'label' => 'College',
-                'value' => 'College',
-            ],
-            [
-                'label' => 'Undergraduate',
-                'value' => 'Undergraduate',
-            ],
-            [
-                'label' => 'Masters',
-                'value' => 'Masters',
-            ],
-            [
-                'label' => 'PhD',
-                'value' => 'PhD',
-            ],
-        ];
-
-
-        $paper_types = [
-            'Research Paper',
-            'Essay',
-            'Report',
-            'Case Study',
-            'Literature Review',
-            'Thesis/Dissertation',
-            'Annoted Bibliography',
-            'Team Paper',
-            'Reflective Paper',
-            'Business Plan',
-            'White Paper',
-            'Proposal',
-            'Creative Writing',
-            'Lab Report'
-        ];
-
-        $disciplines = [
-            ['label' => 'Arts', 'value' => 'Arts'],
-            ['label' => 'Biology', 'value' => 'Biology'],
-            ['label' => 'Business', 'value' => 'Business'],
-            ['label' => 'Chemistry', 'value' => 'Chemistry'],
-            ['label' => 'childcare', 'value' => 'Childcare'],
-            ['label' => 'Computers', 'value' => 'Computers'],
-            ['label' => 'Counseling', 'value' => 'Counseling'],
-            ['label' => 'Criminology', 'value' => 'Criminology'],
-            ['label' => 'Education', 'value' => 'Education'],
-            ['label' => 'Economics', 'value' => 'Economics'],
-            ['label' => 'Enginering', 'value' => 'Engineering'],
-            ['label' => 'Environmental-Studies', 'value' => 'Environment-Studies'],
-            ['label' => 'Ethics', 'value' => 'Ethics'],
-            ['label' => 'Ethnic-Studies', 'value' => 'ethnic-Studies'],
-            ['label' => 'Finance', 'value' => 'Finance'],
-            ['label' => 'Food-Nutrition', 'value' => 'Food-Nutrition'],
-            ['label' => 'Geograpy', 'value' => 'Geograpy'],
-            ['label' => 'Health-Care', 'value' => 'Health-Care'],
-            ['label' => 'History', 'value' => 'History'],
-            ['label' => 'Law', 'value' => 'Law'],
-            ['label' => 'Linguistic', 'value' => 'Linguistic'],
-            ['label' => 'Literature', 'value' => 'Literature'],
-            ['label' => 'Management', 'value' => 'Management'],
-            ['label' => 'Mathematics', 'value' => 'Mathematics'],
-            ['label' => 'Medicine', 'value' => 'Medicine'],
-            ['label' => 'Music', 'value' => 'Music'],
-            ['label' => 'Nursing', 'value' => 'Nursing'],
-            ['label' => 'Philosophy', 'value' => 'Philosophy'],
-            ['label' => 'Physical-Education', 'value' => 'Physical-Education'],
-            ['label' => 'Physics', 'value' => 'Physics'],
-            ['label' => 'Political-Science', 'value' => 'Political-Science'],
-            ['label' => 'Programming', 'value' => 'Programming'],
-            ['label' => 'Psycology', 'value' => 'Psycology'],
-            ['label' => 'Religion', 'value' => 'Religion'],
-            ['label' => 'Sociology', 'value' => 'Sociology'],
-            ['label' => 'Statistics', 'value' => 'Statistics'],
-        ];
-
-        // prices
-        $basePrices = [
-            'college' => 20,
-            'undergraduate' => 25,
-            'masters' => 30,
-            'PhD' => 35,
-        ];
-
-        // Additional cost per page
-        $pricePerPage = 5;
-
-        // Urgency multipliers
-        $urgencyMultipliers = [
-            '6 hours' => 2.0,
-            '12 hours' => 1.75,
-            '24 hours' => 1.5,
-            '48 hours' => 1.25,
-            '3 days' => 1.1,
-            '5 days' => 1.05,
-            '7 days' => 1.0,
-        ];
-
-        // Writer category multipliers
-        $writersCategoryMultipliers = [
-            'standard' => 1.0,
-            'premium' => 1.2,
-            'platinum' => 1.5,
-        ];
-
-
+        $levels = config('order.levels');
+        $disciplines = config('order.disciplines');
+        $deadline = config('order.deadline');
+        $paperTypes = config('order.paperTypes');
+        $categories = config('order.categories');
+        $currency = config('order.currency');
+        $currencySymbols = config('order.currencySymbols');
+        $currencyMultipliers = config('order.currencyMultipliers');
+        $basePrices = config('order.basePrices');
+        $pricePerPage = config('order.pricePerPage');
+        $urgencyMultipliers = config('order.urgencyMultipliers');
+        $writerCategoryMultipliers = config('order.writerCategoryMultipliers');
+        $deadline = config('order.deadline');
 
 
         $order = $request->session()->get('order');
@@ -133,21 +40,26 @@ class OrderController extends Controller
         return view(
             'client.order.step-one',
             compact(
-                'academicLevels',
-                'paper_types',
+                'levels',
+                'paperTypes',
+                'categories',
                 'disciplines',
+                'deadline',
                 'order',
                 'basePrices',
                 'pricePerPage',
                 'urgencyMultipliers',
-                'writersCategoryMultipliers'
-
+                'writerCategoryMultipliers',
+                'currency',
+                'currencyMultipliers',
+                'currencySymbols',
             )
         );
     }
 
     public function handleOrderStepOne(Request $request): RedirectResponse
     {
+
         $validated = $request->validate([
             'academic_level' => 'required',
             'paper_type' => 'required',

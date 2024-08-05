@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\Forms;
+namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ComboboxTwo extends Component
+class Accordion extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class ComboboxTwo extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forms.combobox-two');
+        return view('components.accordion');
     }
 }

@@ -1,6 +1,7 @@
 <x-layouts.guest>
     @include('layouts.main-navigation')
-    <section class="container mx-auto grid place-items-center mt-10  relative " x-data="orderFormData">
+    <section class="container mx-auto grid place-items-center mt-10  relative " x-data="orderFormData"
+        @input-changed="handleInput">
 
         <div class="max-w-3xl  w-full bg-white rounded shadow p-10">
             <div>
@@ -16,18 +17,22 @@
 
                 <div class="mb-2">
                     <x-forms.label for="discipline" value="Discipline:" />
-                    <x-forms.combobox-simple name="discipline" :options="$academicLevels"
-                        value="{{ old('discipline', $order?->discipline) }}" />
-                    <x-forms.error name="discipline" />
+                    <x-forms.select name="academic_level" x-model="academicLevel">
+                        @foreach ($levels as $item)
+                            <option @selected(old('discipline') == $item) value="{{ $item }}">{{ ucfirst($item) }}
+                            </option>
+                        @endforeach
+                    </x-forms.select>
+                    <x-forms.error name="academic_level" />
                 </div>
 
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-2mb-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-2 mb-2">
 
                     <div>
                         <x-forms.label for="paper_type" value="Type of Paper:" />
                         <x-forms.select name="paper_type" x-model="paperType">
-                            @foreach ($paper_types as $item)
+                            @foreach ($paperTypes as $item)
                                 <option @selected(old('paper_type', $order?->paper_type) == $item) value="{{ $item }}">{{ $item }}
                                 </option>
                             @endforeach
@@ -38,7 +43,7 @@
 
                     <div>
                         <x-forms.label for="discipline" value="Discipline:" />
-                        <x-forms.combobox-simple name="discipline" :options="$disciplines"
+                        <x-forms.combobox name="discipline" :options="$disciplines"
                             value="{{ old('discipline', $order?->discipline) }}" />
                         <x-forms.error name="discipline" />
                     </div>
@@ -68,42 +73,8 @@
 
                 <div class="mb-2">
                     <x-forms.label for="number_of_pages" value="Number Of Pages:" />
-                    <div @click="showDropdown = true" @input.debounce.500ms="updateOuter"
-                        x-on:input="currentVal = $event.target.value"
-                        class ="relative bg-slate-100 text-sm font-medium block w-full border border-slate-300 rounded-md px-3 py-2 ring-2 ring-transparent hover:ring-blue-600 ">
-
-                        <span x-text="numberOfPages"></span>
-                        <span class="ms-2">Number Of Pages</span>
-
-                        <input type="text" class="sr-only" name="number_of_pages" id="number_of_pages"
-                            x-model="numberOfPages">
-
-                        <div x-cloak x-show="showDropdown" @click.outside="showDropdown = false"
-                            class="absolute z-10 top-full mt-1 right-0 border border-slate-300 bg-white w-full max-w-48 p-3 shadow-md grid grid-cols-2 items-center">
-
-                            <p class="text-slate-900 font-medium">Number Of Pages</p>
-                            <div class="border border-slate-400 grid grid-cols-3 p-2 items-center">
-                                <button type="button" @click="decrease">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
-                                    </svg>
-                                </button>
-
-                                <span x-text="numberOfPages">
-                                </span>
-
-                                <button type="button" @click="increase">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <x-forms.counter name="number_of_pages" label="Number Of Pages" minVal="1" maxVal="100"
+                        value="{{ old('number_of_pages') }}" />
                     <x-forms.error name="number_of_pages" />
                 </div>
 
@@ -121,8 +92,8 @@
 
                     <div>
                         <x-forms.label for="currency" value="Currency" />
-                        <x-forms.select name="currency">
-                            @foreach (['USD', 'GBP', 'EUR', 'AUD'] as $item)
+                        <x-forms.select name="currency" x-model="currency">
+                            @foreach ($currency as $item)
                                 <option @selected(old('currency', $order?->currency) == $item) value="{{ $item }}">{{ $item }}
                                 </option>
                             @endforeach
@@ -135,7 +106,7 @@
                 <div class="mb-2">
                     <p class="text-slate-700">Deadline:</p>
                     <div class="flex w-full gap-y-1 flex-wrap">
-                        @foreach (['6 hours', '12 hours', '24 hours', '48 hours', '3 days', '5 days', '7 days'] as $item)
+                        @foreach ($deadline as $item)
                             <x-forms.radio-custom-one name="deadline" :$item :$order x-model="deadline" />
                         @endforeach
                     </div>
@@ -145,9 +116,8 @@
                 <div class="mb-2">
                     <p class="text-slate-700">Writer Category:</p>
                     <div class="flex flex-wrap gap-y-1 w-full">
-                        @foreach (['standard', 'premium', 'platinum'] as $item)
-                            <x-forms.radio-custom-one name="writer_category" :$item :$order
-                                x-model="writerCategory" />
+                        @foreach ($categories as $item)
+                            <x-forms.radio-custom-one name="writer_category" :$item :$order x-model="writerCategory" />
                         @endforeach
                     </div>
                     <x-forms.error name="writer_category" />
@@ -169,19 +139,24 @@
 
 
             <div class="text-slate-600 font-medium">
-                <p class="capitalize" x-text="academicLevel"></p>
-                <p class="capitalize" x-text="paperType"></p>
+                <p class="capitalize" x-text="academicLevel">Academic Level</p>
+                <p class="capitalize" x-text="paperType">Paper type</p>
 
                 <div class="border-b border-slate-300 mt-2"></div>
                 <div class="py-2 flex justify-between items-center">
                     <p><span x-text="numberOfPages"></span> page * <span x-text="basePrice()"></span></p>
-                    <p x-text="additionalCost"></p>
+                    <p x-text="subTotal()"></p>
                 </div>
+
+
                 <div class="border-b border-slate-300"></div>
 
                 <div class="flex justify-between items-center mt-2">
                     <span>Total price</span>
-                    <span class="text-green-500">USD <span x-text="finalPrice"></span></span>
+                    <p class="text-green-600 font-bold text-lg">
+                        <span x-text="currencySymbol()"></span>
+                        <span x-text="total"></span>
+                    </p>
                 </div>
             </div>
 
@@ -196,38 +171,55 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('orderFormData', () => ({
-            academicLevel: 'college',
+            academicLevel: @js($order?->academic_level ?? ''),
             numberOfPages: 1,
-            paperType: 'essay',
+            paperType: '',
             deadline: '24 hours',
-            writerCategory: 'standard',
+            writerCategory: 'Standard',
+            currency: 'USD',
 
-            basePrices: @js($basePrices),
-            pricePerPage: @js($pricePerPage),
-            urgencyMultipliers: @js($urgencyMultipliers),
-            writerCategoryMultipliers: @js($writersCategoryMultipliers),
+
+            handleInput(event) {
+                this.numberOfPages = event.detail;
+            },
+
 
             basePrice() {
-                return this.basePrices[this.academicLevel];
+                let basePrices = @js($basePrices);
+                let basePrice = basePrices[this.academicLevel];
+
+                if (basePrice) {
+
+                    return basePrice;
+                }
+                return 0;
             },
 
-            additionalCost() {
-                return this.numberOfPages * this.basePrice();
+            subTotal() {
+                let subTotal = this.numberOfPages * this.basePrice();
+                return subTotal;
             },
 
-            urgencyMultiplier() {
-                return this.urgencyMultipliers[this.deadline];
+            total() {
+                let urgencyMultipliers = @js($urgencyMultipliers);
+                let urgencyMultiplier = urgencyMultipliers[this.deadline];
+
+                let categoryMultipliers = @js($writerCategoryMultipliers);
+                let categoryMultiplier = categoryMultipliers[this.writerCategory];
+
+                let currencyMultipliers = @js($currencyMultipliers);
+                let currencyMultiplier = currencyMultipliers[this.currency];
+
+                let total = this.subTotal() * urgencyMultiplier * categoryMultiplier *
+                    currencyMultiplier;
+
+                return total.toFixed(2);
             },
 
-            writerCategoryMultiplier() {
-                return this.writerCategoryMultipliers[this.writerCategory];
-            },
-
-            finalPrice() {
-                // return parseFloat(this.additionalCost() * this.urgencyMultiplier() * this
-                //     .writerCategoryMultiplier());
-                return parseFloat(((this.basePrice() + this.additionalCost()) * this
-                    .urgencyMultiplier() * this.writerCategoryMultiplier()).toFixed(2));
+            currencySymbol() {
+                let currencySymbols = @js($currencySymbols);
+                let currencySymbol = currencySymbols[this.currency];
+                return currencySymbol;
             },
 
             minVal: 1,
